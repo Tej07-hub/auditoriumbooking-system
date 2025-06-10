@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Search Results</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }  .results-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 80%;
+      max-width: 600px;
+    }
+
+    .results-box h2 {
+      margin-bottom: 20px;
+    }
+
+    .booking-item {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    input[type="date"] {
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="results-box">
+    <h2>Booking Information</h2>
+    <input type="date" id="searchDate">
+    <div id="results">Select a date to see bookings.</div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const searchDateInput = document.getElementById('searchDate');
+      const resultsContainer = document.getElementById('results');
+
+      searchDateInput.addEventListener('change', () => {
+        const selectedDate = searchDateInput.value;
+        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+
+        const matched = bookings.filter(b => b.eventDate === selectedDate);
+
+        if (matched.length === 0) {
+          resultsContainer.innerHTML = `<p>❌ No bookings found for ${selectedDate}</p>`;
+          return;
+        }
+
+        let html = '';
+        matched.forEach(b => {
+          html += `<div class="booking-item">📅 <strong>Date:</strong> ${b.eventDate} &nbsp;&nbsp; 🕒 <strong>Time:</strong> ${b.startTime} - ${b.endTime}</div>`;
+        });
+        resultsContainer.innerHTML = html;
+      });
+    });
+  </script>
+</body>
+</html>
